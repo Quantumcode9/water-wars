@@ -36,10 +36,22 @@ const AuthForm = () => {
         const data = await res.json();
         console.log('Signup response data:', data);
         
-        // ... rest of the sign-up logic
+        // Sign in the user after successful sign up
+        const result = await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (result?.error) {
+          setError(result.error);
+        } else {
+          router.push('/dashboard');
+          router.refresh(); // Refresh to update the session
+        }
       } catch (error) {
         console.error('Signup error:', error);
-        setError('An error occurred. Please try again.');
+        setError('An error occurred during sign up. Please try again.');
       }
     } else {
       // Handle sign in
@@ -53,10 +65,11 @@ const AuthForm = () => {
           setError(result.error);
         } else {
           router.push('/dashboard');
+          router.refresh(); // Refresh to update the session
         }
       } catch (error) {
         console.error('Signin error:', error);
-        setError('An error occurred. Please try again.');
+        setError('An error occurred during sign in. Please try again.');
       }
     }
   };

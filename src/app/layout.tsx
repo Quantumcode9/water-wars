@@ -1,19 +1,23 @@
 import React from 'react';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from './api/auth/[...nextauth]/options';
 import Sidebar from '@/components/Sidebar';
 import MobileMenu from '@/components/MobileMenu';
 import { Providers } from '@/components/Providers';
 import AuthControl from '@/components/AuthControl';
 import '@/app/globals.css';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions);
+
   return (
-    <html lang="en">
+    <html lang="on">
       <body>
-        <Providers>
+        <Providers session={session}>
           <div className="flex h-screen bg-gray-100">
             {/* Sidebar - hidden on mobile, visible on desktop */}
             <div className="hidden lg:block">
