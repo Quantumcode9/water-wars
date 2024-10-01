@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  password          String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  alertPreferences  AlertPreference[]
+  locations         Location[]
+}
+
+model AlertPreference {
+  id                    String  @id @default(cuid())
+  userId                String
+  temperatureThreshold  Float?
+  uvIndexThreshold      Float?
+  precipitationAlert    Boolean @default(false)
+  astroAlert            Boolean @default(false)
+  user                  User    @relation(fields: [userId], references: [id])
+}
+
+model Location {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  latitude    Float
+  longitude   Float
+  user        User      @relation(fields: [userId], references: [id])
+  weatherData WeatherData[]
+}
+
+model WeatherData {
+  id            String    @id @default(cuid())
+  locationId    String
+  timestamp     DateTime
+  temperature   Float
+  humidity      Float
+  uvIndex       Float
+  precipitation Float
+  conditions    String
+  location      Location  @relation(fields: [locationId], references: [id])
+  forecasts     Forecast[]
+}
+
+model Forecast {
+  id                      String    @id @default(cuid())
+  weatherDataId           String
+  forecastTime            DateTime
+  temperature             Float
+  precipitationProbability Float
+  uvIndex                 Float
+  weatherData             WeatherData @relation(fields: [weatherDataId], references: [id])
+}
