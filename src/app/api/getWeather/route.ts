@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   // Your logic to fetch weather data goes here
   // This is just a placeholder response
   return NextResponse.json({ message: 'Weather data endpoint' });
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   // Your logic to handle POST requests, if needed
   const body = await request.json();
   // Process the body and fetch weather data accordingly
