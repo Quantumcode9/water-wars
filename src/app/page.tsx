@@ -49,7 +49,6 @@ interface weatherData {
 
 
 const Dashboard = () => {
-  const [location, setLocation] = useState('');
   const [weatherData, setWeatherData] = useState<weatherData | null>(null);
 
   const handleWeatherDataFetched = (data: weatherData) => {
