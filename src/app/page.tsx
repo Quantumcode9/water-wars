@@ -67,21 +67,6 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6 pb-16 lg:pb-0">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Weather Dashboard</h1>
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Enter your location"
-            className="flex-grow px-4 py-2 border rounded-lg"
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-            Get Weather
-          </button>
-        </div>
-      </div>
       <GeoWeather />
       <Weather onDataFetched={handleWeatherDataFetched} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
