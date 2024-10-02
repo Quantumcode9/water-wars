@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Home, CloudRain, Thermometer, Radio } from 'lucide-react';
+import { Home, Bell, BarChart2, Shield } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const MobileMenu = () => {
@@ -10,9 +10,9 @@ const MobileMenu = () => {
 
   const navItems = [
     { href: '/', icon: Home, label: 'Home' },
-    { href: '/precipitation', icon: CloudRain, label: 'Precipitation' },
-    { href: '/temperature', icon: Thermometer, label: 'Temperature' },
-    { href: '/tinfoil-hat', icon: Radio, label: 'Tinfoil Hat' },
+    { href: '/alerts', icon: Bell, label: 'Alerts' },
+    { href: '/insights', icon: BarChart2, label: 'Insights' },
+    { href: '/preparedness', icon: Shield, label: 'Preparedness' },
   ];
 
   return (
