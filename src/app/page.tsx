@@ -66,7 +66,7 @@ const Dashboard = () => {
   // };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-16 lg:pb-0">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Weather Dashboard</h1>
         <div className="flex space-x-2">

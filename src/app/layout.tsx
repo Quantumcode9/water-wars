@@ -15,7 +15,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="on">
+    <html lang="en">
       <body>
         <Providers session={session}>
           <div className="flex h-screen bg-gray-100">
@@ -26,21 +26,19 @@ export default async function RootLayout({
 
             {/* Main content */}
             <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Mobile header */}
+              {/* Header */}
               <header className="flex items-center justify-between p-4 bg-white border-b">
                 <h1 className="text-xl font-semibold">WeatherWise</h1>
-                <div className="flex items-center">
-                  <AuthControl />
-                  <div className="lg:hidden ml-4">
-                    <MobileMenu />
-                  </div>
-                </div>
+                <AuthControl />
               </header>
               
               {/* Page content */}
-              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4">
+              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 pb-16 lg:pb-4">
                 {children}
               </main>
+
+              {/* Mobile bottom navigation */}
+              <MobileMenu />
             </div>
           </div>
         </Providers>

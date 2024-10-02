@@ -1,38 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import React from 'react';
 import Link from 'next/link';
+import { Home, CloudRain, Thermometer, Radio } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const MobileMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: '/', icon: Home, label: 'Home' },
+    { href: '/precipitation', icon: CloudRain, label: 'Precipitation' },
+    { href: '/temperature', icon: Thermometer, label: 'Temperature' },
+    { href: '/tinfoil-hat', icon: Radio, label: 'Tinfoil Hat' },
+  ];
 
   return (
-    <>
-      <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden">
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {isOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="fixed inset-0 bg-gray-800 opacity-25" onClick={() => setIsOpen(false)}></div>
-          <nav className="relative z-10 px-8 py-4 bg-white w-64 h-full">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl font-semibold">WeatherWise</h1>
-              <button onClick={() => setIsOpen(false)}>
-                <X size={24} />
-              </button>
-            </div>
-            <ul className="space-y-2">
-              <li><Link href="/" className="block py-2" onClick={() => setIsOpen(false)}>Dashboard</Link></li>
-              <li><Link href="/precipitation" className="block py-2" onClick={() => setIsOpen(false)}>Precipitation</Link></li>
-              <li><Link href="/temperature" className="block py-2" onClick={() => setIsOpen(false)}>Temperature</Link></li>
-              <li><Link href="/tinfoil-hat" className="block py-2" onClick={() => setIsOpen(false)}>Tinfoil Hat</Link></li>
-            </ul>
-          </nav>
-        </div>
-      )}
-    </>
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden">
+      <ul className="flex justify-around">
+        {navItems.map((item) => (
+          <li key={item.href}>
+            <Link href={item.href} className={`flex flex-col items-center p-2 ${pathname === item.href ? 'text-blue-500' : 'text-gray-500'}`}>
+              <item.icon size={24} />
+              <span className="text-xs mt-1">{item.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 
