@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sun, Umbrella, Thermometer, Radio } from 'lucide-react';
+import { Umbrella, Thermometer, Radio } from 'lucide-react';
 import DashboardCard from '@/components/DashboardCard';
-import AirQuality from '@/components/AirQuality';
+// import AirQuality from '@/components/AirQuality';
 import Weather from '@/components/Weather';
 import GeoWeather from '@/components/GeoWeather';
 import UVIndex from '@/components/UVIndex';
