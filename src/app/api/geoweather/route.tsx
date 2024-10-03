@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     // for local development, use your own IP address
     if (!ip || ip === '::1' || ip.startsWith('127.0.0.1')) {
-      ip = '97.94.97.225';  // <-- default. Change this to your own IP address
+      ip = '172.225.29.220';  
     } else if (ip.includes(',')) {
       ip = ip.split(',')[0].trim();
     }
@@ -50,8 +50,7 @@ export async function GET(request: NextRequest) {
     }
 
     const weatherData = await weatherResponse.json();
-    console.log('Weather Data:', weatherData); // to check the data received
-
+    console.log('Weather Data:', weatherData); 
     const data = {
       location: {
         city,

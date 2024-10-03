@@ -7,7 +7,16 @@ interface Alert {
   headline: string;
   description: string;
   severity: string;
-  // Add other properties as needed
+  msgtype: string;
+  urgency: string;
+  areas: string;
+  category: string;
+  certainty: string;
+  event: string;
+  note: string;
+  effective: string;
+  expires: string;
+  instruction: string;
 }
 
 const AlertsPage = () => {
@@ -24,7 +33,10 @@ const AlertsPage = () => {
     }
 
     if (storedAlerts) {
-      setAlerts(JSON.parse(storedAlerts));
+      const parsedAlerts = JSON.parse(storedAlerts);
+      if (parsedAlerts.alert) {
+        setAlerts(parsedAlerts.alert);
+      }
     }
   }, []);
 
@@ -53,14 +65,15 @@ const AlertsPage = () => {
             className={`${getSeverityColor(alert.severity)} border-l-4 p-4 mb-4`}
             role="alert"
           >
-            <p className="font-bold">{alert.headline}</p>
+            <p className="font-bold">{alert.headline || alert.event}</p>
             <p>{alert.description}</p>
+            <p className="italic">{alert.instruction}</p>
           </div>
         ))
       ) : (
         <p>No current weather alerts for your area.</p>
       )}
-      <button onClick={() => router.push('/')} className="mt-8 bg-blue-500 text-white px-4 py-2 rounded-lg">
+      <button onClick={() => router.push('/')} className="mt-8 bg-button hover:bg-green-900 text-white px-4 py-2 rounded-lg">
         Return to Dashboard
       </button>
     </div>

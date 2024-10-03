@@ -16,13 +16,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-full w-64 bg-white shadow-lg p-4">
-      <h1 className="text-2xl font-bold mb-6">WeatherWise</h1>
+    <div className="h-full w-64 bg-border shadow-lg p-4">
+      <h1 className="text-2xl font-bold mb-6"></h1>
       <nav>
         <ul className="space-y-2">
           {navItems.map((item) => (
             <li key={item.href}>
-              <Link href={item.href} className={`flex items-center space-x-2 p-2 rounded-lg ${pathname === item.href ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}>
+              <Link href={item.href} className={`flex items-center space-x-2 p-2 rounded-lg ${pathname === item.href ? 'bg-buttonHighlight text-border' : 'text-white hover:shadow-custom-lg'}`}>
                 <item.icon size={20} />
                 <span>{item.label}</span>
               </Link>
