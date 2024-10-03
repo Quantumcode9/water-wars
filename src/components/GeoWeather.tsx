@@ -75,7 +75,7 @@ const GeoWeather: React.FC = () => {
     <div className="p-8 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Current Weather</h1>
       <h2 className="text-xl font-semibold">
-        {city}, {region}, {country}
+        {city}, {region}{country && ` , ${country}`}
       </h2>
       <div className="mt-4 flex items-center">
         <img src={condition.icon} alt={condition.text} />
