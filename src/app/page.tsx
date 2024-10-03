@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Umbrella, Thermometer, Radio } from 'lucide-react';
 import DashboardCard from '@/components/DashboardCard';
+// import AirQuality from '@/components/AirQuality';
 import Weather from '@/components/Weather';
 import GeoWeather from '@/components/GeoWeather';
 import UVIndex from '@/components/UVIndex';
@@ -18,7 +19,6 @@ const Dashboard = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [forecastData, setForecastData] = useState<Forecast | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const handleWeatherDataFetched = (data: WeatherData) => {
     console.log('Received data:', data);
@@ -37,8 +37,8 @@ const Dashboard = () => {
 
 
   return (
-    <div className="space-y-6">
-      <GeoWeather /> 
+    <div className="space-y-6 pb-16 lg:pb-0">
+      <GeoWeather />
       <Weather onDataFetched={handleWeatherDataFetched} />
       {forecastData && (
           <ForecastComponent forecastData={forecastData} />
