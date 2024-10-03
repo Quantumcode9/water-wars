@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import GeoWeather from '@/components/GeoWeather';
+import React, { useState, useEffect } from 'react';
 import UVIndex from '@/components/UVIndex';
 import AirQualityDisplay from '@/components/AirQualityDisplay';
 import AirQualityIndex from '@/components/AirQualityIndex';
@@ -20,15 +19,44 @@ const Dashboard = () => {
   const [manualLocation, setManualLocation] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleWeatherDataFetched = (data: WeatherData) => {
-    console.log('Received data:', data);
-    setWeatherData(data);
-    setError(null);
+  const fetchWeatherData = async (location: string) => {
+    try {
+      const response = await fetch(`/api/weather?city=${encodeURIComponent(location)}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data');
+      }
+      const data = await response.json();
+      setWeatherData(data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching weather data:', err);
+      setError('Failed to fetch weather data. Please try again.');
+      setWeatherData(null);
+    }
   };
 
-  const handleError = (errorMessage: string) => {
-    setError(errorMessage);
-    setWeatherData(null);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          fetchWeatherData(`${latitude},${longitude}`);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          setError('Failed to get your location. Please enter a location manually.');
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by your browser. Please enter a location manually.');
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  const handleManualLocationSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (manualLocation) {
+      fetchWeatherData(manualLocation);
+    }
   };
 
   const handleAirQualityClick = () => {
@@ -39,26 +67,8 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
-  const handleManualLocationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`/api/weather?city=${encodeURIComponent(manualLocation)}`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch weather data');
-      }
-      const data = await response.json();
-      handleWeatherDataFetched(data);
-    } catch (err) {
-      console.error('Error fetching weather data:', err);
-      handleError('Failed to fetch weather data. Please try again.');
-    }
-  };
-
   return (
     <div className="space-y-6 pb-16 lg:pb-0">
-      <GeoWeather onWeatherFetched={handleWeatherDataFetched} onError={handleError} />
-
       {error && (
         <p className="text-red-500">{error}</p>
       )}
