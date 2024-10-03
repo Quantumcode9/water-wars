@@ -1,10 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import '../../styles/accordion.css';
 
-const preparednessData = {
+interface PreparednessItem {
+  name: string;
+  type: string;
+  items: string[];
+}
+
+interface FEMAIncident {
+  incidentType: string;
+}
+
+
+const preparednessData: Record<string, PreparednessItem> = {
   Fire: {
     name: 'Fire',
     type: 'Fire Preparedness',
@@ -117,15 +128,63 @@ const preparednessData = {
   },
 };
 
-
 const PreparednessPage = () => {
   const [location, setLocation] = useState({ state: '', county: '' });
-  const [filteredPreparednessData, setFilteredPreparednessData] = useState<any[]>([]);
+  const [filteredPreparednessData, setFilteredPreparednessData] = useState<PreparednessItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null); // Keep track of active accordion
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  // Fetch user's location and disaster data
+  // Reverse geocode to get state and county
+  const fetchLocationDetails = useCallback(async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      );
+      const data = await response.json();
+      const userState = data.principalSubdivision;
+      const userCounty = data.locality;
+      setLocation({ state: userState, county: userCounty });
+
+      // Fetch disaster data for user's location
+      fetchDisasterData(userState, userCounty);
+    } catch (error) {
+      console.error('Error fetching location details:', error);
+      setError('Could not retrieve location details.');
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch disaster data from FEMA API
+  const fetchDisasterData = async (state: string, county: string) => {
+    try {
+      const response = await fetch(
+        `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=${state}&designatedArea=${county}&declarationDateStart=2020-01-01`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch disaster data.');
+      }
+      const data = await response.json();
+      const recentIncidents: FEMAIncident[] = data.DisasterDeclarationsSummaries.slice(0, 500);
+
+      // Get relevant incident types from the API response
+      const incidentTypes = recentIncidents.map((incident) => incident.incidentType);
+
+      // Filter preparednessData based on incident types
+      const filteredData = Object.keys(preparednessData)
+        .filter((key) => incidentTypes.includes(preparednessData[key].name))
+        .map((key) => preparednessData[key]);
+
+      setFilteredPreparednessData(filteredData);
+    } catch (error) {
+      console.error('Error fetching FEMA data:', error);
+      setError('Could not retrieve disaster data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch user's location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -143,57 +202,7 @@ const PreparednessPage = () => {
       setError('Geolocation is not supported by this browser.');
       setLoading(false);
     }
-  }, []);
-
-  // Reverse geocode to get state and county
-  const fetchLocationDetails = async (latitude: number, longitude: number) => {
-    try {
-      const response = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-      );
-      const data = await response.json();
-      const userState = data.principalSubdivision;
-      const userCounty = data.locality;
-      setLocation({ state: userState, county: userCounty });
-      
-      // Fetch disaster data for user's location
-      fetchDisasterData(userState, userCounty);
-    } catch (error) {
-      console.error('Error fetching location details:', error);
-      setError('Could not retrieve location details.');
-      setLoading(false);
-    }
-  };
-
-  // Fetch disaster data from FEMA API
-  const fetchDisasterData = async (state: string, county: string) => {
-    try {
-      const response = await fetch(
-        `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=${state}&designatedArea=${county}&declarationDateStart=2020-01-01`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch disaster data.');
-      }
-      const data = await response.json();
-      const recentIncidents = data.DisasterDeclarationsSummaries.slice(0, 500)
-
-      // Get relevant incident types from the API response
-      const incidentTypes = recentIncidents.map((incident: any) => incident.incidentType);
-
-      // Filter preparednessData based on incident types
-      const filteredData = (Object.keys(preparednessData) as Array<keyof typeof preparednessData>)
-      .filter((key) => incidentTypes.includes(preparednessData[key].name))
-      .map((key) => preparednessData[key]);
-      setFilteredPreparednessData(filteredData);
-
-
-    } catch (error) {
-      console.error('Error fetching FEMA data:', error);
-      setError('Could not retrieve disaster data.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchLocationDetails]);
 
   // Toggle accordion
   const handleAccordionClick = (index: number) => {
