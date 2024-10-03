@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { WeatherData } from '@/lib/types';
 import AlertsModal from './AlertsModal';
-import ForecastComponent from './Forecast';
+// import ForecastComponent from './Forecast';
 
 interface WeatherProps {
 onDataFetched: (data: WeatherData) => void;
