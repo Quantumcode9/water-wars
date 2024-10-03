@@ -10,8 +10,10 @@ import Humidity from '@/components/Humidity';
 import Precipitation from '@/components/Precipitation';
 import Temperature from '@/components/Temperature';
 import AlienActivity from '@/components/AlienActivity';
-import { WeatherData } from '@/lib/types';
+import { WeatherData, ForecastDay } from '@/lib/types';
 import { Search } from 'lucide-react';
+
+
 
 const Dashboard = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
@@ -29,12 +31,35 @@ const Dashboard = () => {
       setWeatherData(data);
       setError(null);
 
+      // Store comprehensive data for visualizations
+      const visualizationData = {
+        location: data.location,
+        current: data.current,
+        forecast: data.forecast.forecastday.map((day: ForecastDay) => ({
+          date: day.date,
+          maxTemp: day.day.maxtemp_c,
+          minTemp: day.day.mintemp_c,
+          avgTemp: day.day.avgtemp_c,
+          totalPrecip: day.day.totalprecip_mm,
+          uv: day.day.uv,
+          moonPhase: day.astro.moon_phase,
+        })),
+      };
+      localStorage.setItem('weatherVisualizationData', JSON.stringify(visualizationData));
+
       // Store location data in localStorage
       const locationData = {
         state: data.location.region,
         county: data.location.name, // Adjust if needed
       };
       localStorage.setItem('userLocation', JSON.stringify(locationData));
+
+      // Store alert data in localStorage
+      if (data.alerts && data.alerts.alert) {
+        localStorage.setItem('weatherAlerts', JSON.stringify(data.alerts.alert));
+      } else {
+        localStorage.removeItem('weatherAlerts');
+      }
     } catch (err) {
       console.error('Error fetching weather data:', err);
       setError('Failed to fetch weather data. Please try again.');

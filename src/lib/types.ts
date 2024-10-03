@@ -1,11 +1,13 @@
+// lib/types.ts
+
 export interface WeatherData {
     location: Location;
     current: CurrentWeather;
     forecast: Forecast;
     alerts: Alerts;
-}
-
-export interface Location {
+  }
+  
+  export interface Location {
     name: string;
     region: string;
     country: string;
@@ -14,9 +16,9 @@ export interface Location {
     tz_id: string;
     localtime_epoch: number;
     localtime: string;
-}
-
-export interface CurrentWeather {
+  }
+  
+  export interface CurrentWeather {
     last_updated_epoch: number;
     last_updated: string;
     temp_c: number;
@@ -41,15 +43,15 @@ export interface CurrentWeather {
     gust_mph: number;
     gust_kph: number;
     air_quality: AirQuality;
-}
-
-export interface Condition {
+  }
+  
+  export interface Condition {
     text: string;
     icon: string;
     code: number;
-}
-
-export interface AirQuality {
+  }
+  
+  export interface AirQuality {
     co: number;
     no2: number;
     o3: number;
@@ -58,28 +60,32 @@ export interface AirQuality {
     pm10: number;
     'us-epa-index': number;
     'gb-defra-index': number;
-}
-
-export interface Forecast {
+  }
+  
+  export interface Forecast {
     forecastday: ForecastDay[];
-}
-
-export interface ForecastDay {
+  }
+  
+  export interface ForecastDay {
     date: string;
     date_epoch: number;
     day: DayForecast;
     astro: Astro;
     hour: HourlyForecast[];
-}
-
-export interface DayForecast {
+  }
+  
+  export interface DayForecast {
     maxtemp_c: number;
+    maxtemp_f: number;
     mintemp_c: number;
+    mintemp_f: number;
     avgtemp_c: number;
+    avgtemp_f: number;
     maxwind_mph: number;
     maxwind_kph: number;
     totalprecip_mm: number;
     totalprecip_in: number;
+    totalsnow_cm: number;
     avgvis_km: number;
     avgvis_miles: number;
     avghumidity: number;
@@ -89,18 +95,20 @@ export interface DayForecast {
     daily_chance_of_snow: number;
     condition: Condition;
     uv: number;
-}
-
-export interface Astro {
+  }
+  
+  export interface Astro {
     sunrise: string;
     sunset: string;
     moonrise: string;
     moonset: string;
     moon_phase: string;
     moon_illumination: string;
-}
-
-export interface HourlyForecast {
+    is_moon_up: number;
+    is_sun_up: number;
+  }
+  
+  export interface HourlyForecast {
     time_epoch: number;
     time: string;
     temp_c: number;
@@ -134,13 +142,13 @@ export interface HourlyForecast {
     gust_mph: number;
     gust_kph: number;
     uv: number;
-}
-
-export interface Alerts {
+  }
+  
+  export interface Alerts {
     alert: Alert[];
-}
-
-export interface Alert {
+  }
+  
+  export interface Alert {
     headline: string;
     msgtype: string;
     severity: string;
@@ -154,4 +162,4 @@ export interface Alert {
     expires: string;
     desc: string;
     instruction: string;
-}
+  }
