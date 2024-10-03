@@ -20,9 +20,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(
+    const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${encodeURIComponent(
       city
-    )}&aqi=no`;
+    )}&aqi=yes&alerts=yes`;
 
     const response = await fetch(apiUrl);
 
