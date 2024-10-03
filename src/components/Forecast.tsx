@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Slider from 'react-slick';
-import { Forecast } from '@/lib/types';
+import { Forecast as ForecastType } from '@/lib/types';
 
 interface ForecastProps {
-forecastData: Forecast;
+forecastData: ForecastType;
 }
 
 const Forecast: React.FC<ForecastProps> = ({ forecastData }) => {
