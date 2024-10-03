@@ -191,7 +191,7 @@ const PreparednessPage = () => {
       return (
         <div>
           <p>{error}</p>
-          <button onClick={() => router.push('/')} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
+          <button onClick={() => router.push('/')} className="mt-4 bg-button hover:bg-green-900 text-white px-4 py-2 rounded-lg">
             Return to Dashboard
           </button>
         </div>
@@ -218,7 +218,7 @@ const PreparednessPage = () => {
             <p>No relevant preparedness information for recent incidents.</p>
           )}
         </div>
-        <button onClick={() => router.push('/')} className="mt-8 bg-blue-500 text-white px-4 py-2 rounded-lg">
+        <button onClick={() => router.push('/')} className="mt-8 bg-button hover:bg-green-900  text-white px-4 py-2 rounded-lg">
           Return to Dashboard
         </button>
       </div>

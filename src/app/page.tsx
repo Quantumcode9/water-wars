@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { WeatherDataContext } from '@/context/WeatherDataContext';
 import UVIndex from '@/components/UVIndex';
 import AirQualityDisplay from '@/components/AirQualityDisplay';
 import AirQualityIndex from '@/components/AirQualityIndex';
@@ -13,13 +14,17 @@ import AlienActivity from '@/components/AlienActivity';
 import { WeatherData, ForecastDay } from '@/lib/types';
 import { Search } from 'lucide-react';
 
-
-
 const Dashboard = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [manualLocation, setManualLocation] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  const { weatherData, setWeatherData } = useContext(WeatherDataContext);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const fetchWeatherData = async (location: string) => {
     try {
@@ -27,11 +32,14 @@ const Dashboard = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch weather data');
       }
-      const data = await response.json();
+      const data: WeatherData = await response.json();
       setWeatherData(data);
       setError(null);
 
-      // Store comprehensive data for visualizations
+      // Store weather data in localStorage
+      localStorage.setItem('weatherData', JSON.stringify(data));
+
+      // Prepare visualization data and store it in localStorage
       const visualizationData = {
         location: data.location,
         current: data.current,
@@ -50,7 +58,7 @@ const Dashboard = () => {
       // Store location data in localStorage
       const locationData = {
         state: data.location.region,
-        county: data.location.name, // Adjust if needed
+        county: data.location.name,
       };
       localStorage.setItem('userLocation', JSON.stringify(locationData));
 
@@ -64,26 +72,31 @@ const Dashboard = () => {
       console.error('Error fetching weather data:', err);
       setError('Failed to fetch weather data. Please try again.');
       setWeatherData(null);
+      localStorage.removeItem('weatherData');
     }
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          fetchWeatherData(`${latitude},${longitude}`);
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-          setError('Failed to get your location. Please enter a location manually.');
-        }
-      );
+    const storedData = localStorage.getItem('weatherData');
+    if (storedData) {
+      setWeatherData(JSON.parse(storedData));
     } else {
-      setError('Geolocation is not supported by your browser. Please enter a location manually.');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            fetchWeatherData(`${latitude},${longitude}`);
+          },
+          (error) => {
+            console.error('Geolocation error:', error);
+            setError('Failed to get your location. Please enter a location manually.');
+          }
+        );
+      } else {
+        setError('Geolocation is not supported by your browser. Please enter a location manually.');
+      }
     }
   }, []);
-
 
   const handleManualLocationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,37 +113,43 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
+
   return (
     <div className="space-y-6 pb-16 lg:pb-0">
-      {error && (
-        <p className="text-red-500">{error}</p>
-      )}
+      {error && <p className="text-red-500">{error}</p>}
 
-      {!weatherData && (
-        <form onSubmit={handleManualLocationSubmit} className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={manualLocation}
-            onChange={(e) => setManualLocation(e.target.value)}
-            placeholder="Enter location (e.g., city or zip code)"
-            className="flex-grow px-4 py-2 border rounded-lg"
-          />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg">
-            <Search size={24} />
-          </button>
-        </form>
-      )}
+      <form onSubmit={handleManualLocationSubmit} className="flex items-center space-x-2">
+        <input
+          type="text"
+          value={manualLocation}
+          onChange={(e) => setManualLocation(e.target.value)}
+          placeholder="Enter location (e.g., city or zip code)"
+          className="flex-grow px-4 py-2 border rounded-lg"
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg">
+          <Search size={24} />
+        </button>
+      </form>
 
       {weatherData && (
         <>
           <div className="bg-white shadow rounded-lg p-6">
-            <h1 className="text-2xl font-bold mb-4">Current Weather in {weatherData.location.name}</h1>
+            <h1 className="text-2xl font-bold mb-4">
+              Current Weather in {weatherData.location.name}
+            </h1>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-4xl font-bold">{weatherData.current.temp_c}°C</p>
                 <p className="text-xl">{weatherData.current.condition.text}</p>
               </div>
-              <img src={weatherData.current.condition.icon} alt={weatherData.current.condition.text} className="w-24 h-24" />
+              <img
+                src={weatherData.current.condition.icon}
+                alt={weatherData.current.condition.text}
+                className="w-24 h-24"
+              />
             </div>
           </div>
 
@@ -139,8 +158,13 @@ const Dashboard = () => {
             <Precipitation weatherData={weatherData} />
             <Humidity weatherData={weatherData} />
             <UVIndex weatherData={weatherData} />
-            <AirQualityIndex airQuality={weatherData.current.air_quality} onClick={handleAirQualityClick} />
-            <AlienActivity moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase} />
+            <AirQualityIndex
+              airQuality={weatherData.current.air_quality}
+              onClick={handleAirQualityClick}
+            />
+            <AlienActivity
+              moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase}
+            />
           </div>
 
           <ForecastComponent forecastData={weatherData.forecast} />
