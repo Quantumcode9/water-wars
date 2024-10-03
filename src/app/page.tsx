@@ -11,7 +11,7 @@ import AirQualityDisplay from '@/components/AirQualityDispay';
 import AirQualityIndex from '@/components/AirQualityIndex';
 import Modal from '@/components/Modal';
 import ForecastComponent from '@/components/Forecast';
-import { WeatherData, AirQuality, Forecast, Alert } from '@/lib/types';
+import { WeatherData, Forecast } from '@/lib/types';
 
 
 
