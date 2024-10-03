@@ -7,6 +7,7 @@ interface WeatherData {
     uv: number;
   };
 }
+
 interface UVIndexProps {
   weatherData: WeatherData | null;
 }
@@ -46,19 +47,17 @@ const getUVIndexCategory = (uv: number) => {
 };
 
 const UVIndex: React.FC<UVIndexProps> = ({ weatherData }) => {
-  const uvIndex = weatherData?.current.uv || 0;
+  if (!weatherData) {
+    return null;
+  }
+
+  const uvIndex = weatherData.current.uv;
   const { category, color, recommendation } = getUVIndexCategory(uvIndex);
 
   return (
     <DashboardCard
       title="UV Index"
-      value={
-        weatherData ? (
-          <span className={color}>{`${uvIndex} (${category})`}</span>
-        ) : (
-          ''
-        )
-      }
+      value={<span className={color}>{`${uvIndex} | ${category}`}</span>}
       icon={Sun}
       recommendation={recommendation}
     />

@@ -5,6 +5,8 @@ import Sidebar from '@/components/Sidebar';
 import MobileMenu from '@/components/MobileMenu';
 import { Providers } from '@/components/Providers';
 import AuthControl from '@/components/AuthControl';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import '@/app/globals.css';
 
 export default async function RootLayout({
