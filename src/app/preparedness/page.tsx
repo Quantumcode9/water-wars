@@ -119,49 +119,86 @@ const preparednessData = {
 
 
 const PreparednessPage = () => {
-  const [filteredPreparednessData, setFilteredPreparednessData] = useState<
-    any[]
-  >([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [location, setLocation] = useState({ state: '', county: '' });
+  const [filteredPreparednessData, setFilteredPreparednessData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null); // Keep track of active accordion
 
+  // Fetch user's location and disaster data
   useEffect(() => {
-    fetch(
-      'https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=CA&declarationDateStart=2020-01-01&designatedArea=Riverside%20(County)'
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error fetching data');
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          fetchLocationDetails(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error fetching geolocation:', error);
+          setError('Could not retrieve location.');
+          setLoading(false);
         }
-        return response.json();
-      })
-      .then((data) => {
-        // Get the 10 most recent incidents
-        const recentIncidents = data.DisasterDeclarationsSummaries.slice(0, 100);
-  
-        // Extract incident types from API data
-        const incidentTypes = recentIncidents.map(
-          (incident: any) => incident.incidentType
-        );
-  
-        // Filter preparednessData based on incident types present in recentIncidents
-        const filteredData = Object.keys(preparednessData)
-          .filter((key) =>
-            incidentTypes.includes(preparednessData[key].name) // Compare API type with `name` key
-          )
-          .map((key) => preparednessData[key]);
-  
-        setFilteredPreparednessData(filteredData);
-      })
-      .catch((error) => {
-        console.error('Error fetching FEMA data:', error);
-        setError('Failed to load data');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      );
+    } else {
+      setError('Geolocation is not supported by this browser.');
+      setLoading(false);
+    }
   }, []);
-  
+
+  // Reverse geocode to get state and county
+  const fetchLocationDetails = async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      );
+      const data = await response.json();
+      const userState = data.principalSubdivision;
+      const userCounty = data.locality;
+      setLocation({ state: userState, county: userCounty });
+      
+      // Fetch disaster data for user's location
+      fetchDisasterData(userState, userCounty);
+    } catch (error) {
+      console.error('Error fetching location details:', error);
+      setError('Could not retrieve location details.');
+      setLoading(false);
+    }
+  };
+
+  // Fetch disaster data from FEMA API
+  const fetchDisasterData = async (state: string, county: string) => {
+    try {
+      const response = await fetch(
+        `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=${state}&designatedArea=${county}&declarationDateStart=2020-01-01`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch disaster data.');
+      }
+      const data = await response.json();
+      const recentIncidents = data.DisasterDeclarationsSummaries.slice(0, 500)
+
+      // Get relevant incident types from the API response
+      const incidentTypes = recentIncidents.map((incident: any) => incident.incidentType);
+
+      // Filter preparednessData based on incident types
+      const filteredData = (Object.keys(preparednessData) as Array<keyof typeof preparednessData>)
+      .filter((key) => incidentTypes.includes(preparednessData[key].name))
+      .map((key) => preparednessData[key]);
+      setFilteredPreparednessData(filteredData);
+
+
+    } catch (error) {
+      console.error('Error fetching FEMA data:', error);
+      setError('Could not retrieve disaster data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Toggle accordion
+  const handleAccordionClick = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
 
   if (loading) {
     return <p>Loading preparedness data...</p>;
@@ -173,35 +210,35 @@ const PreparednessPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Disaster Preparedness</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Disaster Preparedness for {location.county}, {location.state}
+      </h1>
       <div className="space-y-6">
         {filteredPreparednessData.length > 0 ? (
           filteredPreparednessData.map((disaster, index) => (
-            <Accordion key={index} title={disaster.type} items={disaster.items} />
+            <Accordion
+              key={index}
+              title={disaster.type}
+              items={disaster.items}
+              isOpen={activeIndex === index}
+              onClick={() => handleAccordionClick(index)}
+            />
           ))
         ) : (
-          <p>No relevant preparedness information for the recent incidents.</p>
+          <p>No relevant preparedness information for recent incidents.</p>
         )}
       </div>
     </div>
   );
 };
 
-// Accordion Component
-const Accordion = ({
-  title,
-  items,
-}: {
-  title: string;
-  items: string[];
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+// Accordion component
+const Accordion = ({ title, items, isOpen, onClick }: { title: string; items: string[]; isOpen: boolean; onClick: () => void }) => {
   return (
     <div className="accordion-item mb-4 border-b">
       <button
         className="accordion-title w-full flex justify-between items-center text-left py-3 text-lg font-semibold"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={onClick}
       >
         <span>{title}</span>
         <img

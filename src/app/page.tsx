@@ -7,67 +7,43 @@ import DashboardCard from '@/components/DashboardCard';
 import Weather from '@/components/Weather';
 import GeoWeather from '@/components/GeoWeather';
 import UVIndex from '@/components/UVIndex';
+import AirQualityDisplay from '@/components/AirQualityDispay';
+import AirQualityIndex from '@/components/AirQualityIndex';
+import Modal from '@/components/Modal';
+import ForecastComponent from '@/components/Forecast';
+import { WeatherData, Forecast } from '@/lib/types';
 
-
-interface weatherData {
-  location: {
-      name: string;
-      region: string;
-      country: string;
-      lat: number;
-      lon: number;
-      tz_id: string;
-      localtime_epoch: number;
-      localtime: string;
-  };
-  current: {
-      temp_c: number;
-      temp_f: number;
-      is_day: number;
-      condition: {
-      text: string;
-      icon: string;
-      code: number;
-      };
-      wind_mph: number;
-      wind_kph: number;
-      wind_degree: number;
-      wind_dir: string;
-      pressure_mb: number;
-      pressure_in: number;
-      precip_mm: number;
-      precip_in: number;
-      humidity: number;
-      cloud: number;
-      feelslike_c: number;
-      feelslike_f: number;
-      uv: number;
-      gust_mph: number;
-      gust_kph: number;
-  };
-  }
 
 
 const Dashboard = () => {
-  const [weatherData, setWeatherData] = useState<weatherData | null>(null);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [forecastData, setForecastData] = useState<Forecast | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleWeatherDataFetched = (data: weatherData) => {
+  const handleWeatherDataFetched = (data: WeatherData) => {
+    console.log('Received data:', data);
+    console.log('Forecast data:', data.forecast);
     setWeatherData(data);
+    setForecastData(data.forecast);
   };
 
+  const handleAirQualityClick = () => {
+    setIsModalOpen(true);
+  };
 
-  // // TODO: Replace with actual API calls and data processing
-  // const weatherData = {
-  //   temperature: '22°C',
-  //   precipitation: '30%',
-  //   uv: '6 (High)',
-  //   astrological: 'Mercury in retrograde'
-  // };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   return (
     <div className="space-y-6 pb-16 lg:pb-0">
       <GeoWeather />
       <Weather onDataFetched={handleWeatherDataFetched} />
+      {forecastData && (
+          <ForecastComponent forecastData={forecastData} />
+        )}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <DashboardCard
           title="Temperature"
@@ -79,6 +55,9 @@ const Dashboard = () => {
           icon={Thermometer}
           recommendation="It's a pleasant day!"
         />
+
+        
+
         <DashboardCard
           title="Precipitation"
           value={
@@ -89,15 +68,13 @@ const Dashboard = () => {
           icon={Umbrella}
           recommendation="You might want to bring an umbrella."
         />
-        {/* <DashboardCard
-          title="UV Index"
-          value={
-            weatherData ? `${weatherData.current.uv} (high)` : ''
-          }
-          icon={Sun}
-          recommendation="Don't forget your sunscreen!"
-        /> */}
         <UVIndex weatherData={weatherData} />
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <AirQualityDisplay airQuality={weatherData?.current.air_quality || null} />
+      </Modal>
+      <AirQualityIndex airQuality={weatherData?.current.air_quality || null} onClick={handleAirQualityClick} />
+
         <DashboardCard
           title="Humidity"
           value={
