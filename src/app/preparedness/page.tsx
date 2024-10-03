@@ -10,8 +10,12 @@ interface PreparednessItem {
   items: string[];
 }
 
+interface FEMAIncident {
+  incidentType: string;
+}
 
-const preparednessData = {
+
+const preparednessData: Record<string, PreparednessItem> = {
   Fire: {
     name: 'Fire',
     type: 'Fire Preparedness',
@@ -149,7 +153,7 @@ const PreparednessPage = () => {
       setError('Could not retrieve location details.');
       setLoading(false);
     }
-  }, []); // Include empty dependency array since the function doesn't depend on any external variables.
+  }, []);
 
   // Fetch disaster data from FEMA API
   const fetchDisasterData = async (state: string, county: string) => {
@@ -161,13 +165,13 @@ const PreparednessPage = () => {
         throw new Error('Failed to fetch disaster data.');
       }
       const data = await response.json();
-      const recentIncidents = data.DisasterDeclarationsSummaries.slice(0, 500);
+      const recentIncidents: FEMAIncident[] = data.DisasterDeclarationsSummaries.slice(0, 500);
 
       // Get relevant incident types from the API response
-      const incidentTypes = recentIncidents.map((incident: any) => incident.incidentType);
+      const incidentTypes = recentIncidents.map((incident) => incident.incidentType);
 
       // Filter preparednessData based on incident types
-      const filteredData = (Object.keys(preparednessData) as Array<keyof typeof preparednessData>)
+      const filteredData = Object.keys(preparednessData)
         .filter((key) => incidentTypes.includes(preparednessData[key].name))
         .map((key) => preparednessData[key]);
 
@@ -198,7 +202,7 @@ const PreparednessPage = () => {
       setError('Geolocation is not supported by this browser.');
       setLoading(false);
     }
-  }, [fetchLocationDetails]); // Include fetchLocationDetails in the dependency array.
+  }, [fetchLocationDetails]);
 
   // Toggle accordion
   const handleAccordionClick = (index: number) => {
