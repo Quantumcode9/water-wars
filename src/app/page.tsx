@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import UVIndex from '@/components/UVIndex';
 import AirQualityDisplay from '@/components/AirQualityDisplay';
 import AirQualityIndex from '@/components/AirQualityIndex';
