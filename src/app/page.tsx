@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import UVIndex from '@/components/UVIndex';
 import AirQualityDisplay from '@/components/AirQualityDisplay';
 import AirQualityIndex from '@/components/AirQualityIndex';
@@ -28,6 +29,13 @@ const Dashboard = () => {
       const data = await response.json();
       setWeatherData(data);
       setError(null);
+
+      // Store location data in localStorage
+      const locationData = {
+        state: data.location.region,
+        county: data.location.name, // Adjust if needed
+      };
+      localStorage.setItem('userLocation', JSON.stringify(locationData));
     } catch (err) {
       console.error('Error fetching weather data:', err);
       setError('Failed to fetch weather data. Please try again.');
@@ -50,7 +58,8 @@ const Dashboard = () => {
     } else {
       setError('Geolocation is not supported by your browser. Please enter a location manually.');
     }
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
+
 
   const handleManualLocationSubmit = (e: React.FormEvent) => {
     e.preventDefault();

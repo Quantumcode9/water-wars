@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import '../../styles/accordion.css';
 
 interface PreparednessItem {
@@ -13,7 +13,6 @@ interface PreparednessItem {
 interface FEMAIncident {
   incidentType: string;
 }
-
 
 const preparednessData: Record<string, PreparednessItem> = {
   Fire: {
@@ -129,117 +128,104 @@ const preparednessData: Record<string, PreparednessItem> = {
 };
 
 const PreparednessPage = () => {
-  const [location, setLocation] = useState({ state: '', county: '' });
-  const [filteredPreparednessData, setFilteredPreparednessData] = useState<PreparednessItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  // Reverse geocode to get state and county
-  const fetchLocationDetails = useCallback(async (latitude: number, longitude: number) => {
-    try {
-      const response = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-      );
-      const data = await response.json();
-      const userState = data.principalSubdivision;
-      const userCounty = data.locality;
-      setLocation({ state: userState, county: userCounty });
-
-      // Fetch disaster data for user's location
-      fetchDisasterData(userState, userCounty);
-    } catch (error) {
-      console.error('Error fetching location details:', error);
-      setError('Could not retrieve location details.');
-      setLoading(false);
-    }
-  }, []);
-
-  // Fetch disaster data from FEMA API
-  const fetchDisasterData = async (state: string, county: string) => {
-    try {
-      const response = await fetch(
-        `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=${state}&designatedArea=${county}&declarationDateStart=2020-01-01`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch disaster data.');
+    const [filteredPreparednessData, setFilteredPreparednessData] = useState<PreparednessItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [location, setLocation] = useState<{ state: string; county: string } | null>(null);
+    const router = useRouter();
+  
+    useEffect(() => {
+      const storedLocation = localStorage.getItem('userLocation');
+      if (storedLocation) {
+        setLocation(JSON.parse(storedLocation));
+      } else {
+        setError('Location information is not available. Please return to the dashboard.');
+        setLoading(false);
       }
-      const data = await response.json();
-      const recentIncidents: FEMAIncident[] = data.DisasterDeclarationsSummaries.slice(0, 500);
-
-      // Get relevant incident types from the API response
-      const incidentTypes = recentIncidents.map((incident) => incident.incidentType);
-
-      // Filter preparednessData based on incident types
-      const filteredData = Object.keys(preparednessData)
-        .filter((key) => incidentTypes.includes(preparednessData[key].name))
-        .map((key) => preparednessData[key]);
-
-      setFilteredPreparednessData(filteredData);
-    } catch (error) {
-      console.error('Error fetching FEMA data:', error);
-      setError('Could not retrieve disaster data.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch user's location
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          fetchLocationDetails(latitude, longitude);
-        },
-        (error) => {
-          console.error('Error fetching geolocation:', error);
-          setError('Could not retrieve location.');
+    }, []);
+  
+    useEffect(() => {
+      const fetchDisasterData = async () => {
+        if (!location) return;
+  
+        try {
+          const response = await fetch(
+            `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=${location.state}&designatedArea=${location.county}&declarationDateStart=2020-01-01`
+          );
+          if (!response.ok) {
+            throw new Error('Failed to fetch disaster data.');
+          }
+          const data = await response.json();
+          const recentIncidents: FEMAIncident[] = data.DisasterDeclarationsSummaries.slice(0, 500);
+  
+          const incidentTypes = recentIncidents.map((incident) => incident.incidentType);
+  
+          const filteredData = Object.keys(preparednessData)
+            .filter((key) => incidentTypes.includes(preparednessData[key].name))
+            .map((key) => preparednessData[key]);
+  
+          setFilteredPreparednessData(filteredData);
+        } catch (error) {
+          console.error('Error fetching FEMA data:', error);
+          setError('Could not retrieve disaster data.');
+        } finally {
           setLoading(false);
         }
-      );
-    } else {
-      setError('Geolocation is not supported by this browser.');
-      setLoading(false);
+      };
+  
+      if (location) {
+        fetchDisasterData();
+      }
+    }, [location]);
+  
+    const handleAccordionClick = (index: number) => {
+      setActiveIndex(activeIndex === index ? null : index);
+    };
+  
+    if (loading) {
+      return <p>Loading preparedness data...</p>;
     }
-  }, [fetchLocationDetails]);
-
-  // Toggle accordion
-  const handleAccordionClick = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
-
-  if (loading) {
-    return <p>Loading preparedness data...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">
-        Disaster Preparedness for {location.county}, {location.state}
-      </h1>
-      <div className="space-y-6">
-        {filteredPreparednessData.length > 0 ? (
-          filteredPreparednessData.map((disaster, index) => (
-            <Accordion
-              key={index}
-              title={disaster.type}
-              items={disaster.items}
-              isOpen={activeIndex === index}
-              onClick={() => handleAccordionClick(index)}
-            />
-          ))
-        ) : (
-          <p>No relevant preparedness information for recent incidents.</p>
-        )}
+  
+    if (error) {
+      return (
+        <div>
+          <p>{error}</p>
+          <button onClick={() => router.push('/')} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">
+            Return to Dashboard
+          </button>
+        </div>
+      );
+    }
+  
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">
+          Disaster Preparedness for {location?.county}, {location?.state}
+        </h1>
+        <div className="space-y-6">
+          {filteredPreparednessData.length > 0 ? (
+            filteredPreparednessData.map((disaster, index) => (
+              <Accordion
+                key={index}
+                title={disaster.type}
+                items={disaster.items}
+                isOpen={activeIndex === index}
+                onClick={() => handleAccordionClick(index)}
+              />
+            ))
+          ) : (
+            <p>No relevant preparedness information for recent incidents.</p>
+          )}
+        </div>
+        <button onClick={() => router.push('/')} className="mt-8 bg-blue-500 text-white px-4 py-2 rounded-lg">
+          Return to Dashboard
+        </button>
       </div>
-    </div>
-  );
-};
+    );
+  };
+  
+  
 
 // Accordion component
 const Accordion = ({ title, items, isOpen, onClick }: { title: string; items: string[]; isOpen: boolean; onClick: () => void }) => {
