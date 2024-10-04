@@ -1,36 +1,59 @@
 import React from 'react';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from './api/auth/[...nextauth]/options';
 import Sidebar from '@/components/Sidebar';
 import MobileMenu from '@/components/MobileMenu';
+import { Providers } from '@/components/Providers';
+import AuthControl from '@/components/AuthControl';
+import { WeatherDataProvider } from '@/context/WeatherDataContext';
+import DarkModeToggle from '@/components/DarkModeToggle';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import '@/app/globals.css';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body>
-        <div className="flex h-screen bg-gray-100">
-          {/* Sidebar - hidden on mobile, visible on desktop */}
-          <div className="hidden lg:block">
-            <Sidebar />
-          </div>
+        <Providers session={session}>
+        <WeatherDataProvider>
+        <div className="flex-1 flex flex-col overflow-hidden">
+              {/* Header */}
+              <header className="relative flex items-center justify-between p-4 bg-border border-b">
+  <h1 className="text-xl text-white font-semibold overflow-visible">
+    Cloudy with A Chance of Chaos Probability
+  </h1>
+  <div className="flex space-x-4">
+    <DarkModeToggle />
+  <AuthControl />
+</div>
+</header>
 
-          {/* Main content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Mobile header */}
-            <header className="flex items-center justify-between p-4 bg-white border-b lg:hidden">
-              <h1 className="text-xl font-semibold">WeatherWise</h1>
+            {/* Sidebar */}
+          <div className="flex h-screen bg-gray-100">
+            {/* Sidebar - hidden on mobile, visible on desktop */}
+            <div className="hidden lg:block">
+              <Sidebar />
+            </div>
+
+              {/* Main content */}
+              <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 pb-16 lg:pb-4">
+                {children}
+              </main>
+
+              {/* Mobile bottom navigation */}
               <MobileMenu />
-            </header>
-            
-            {/* Page content */}
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4">
-              {children}
-            </main>
+            </div>
           </div>
-        </div>
+        </WeatherDataProvider>
+        </Providers>
       </body>
     </html>
   );

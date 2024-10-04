@@ -1,0 +1,24 @@
+.accordion-item {
+    margin-bottom: 1rem;
+  }
+  
+  .accordion-title {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    width: 100%;
+    font-weight: bold;
+  }
+  
+  .accordion-title:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .accordion-content {
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+  
