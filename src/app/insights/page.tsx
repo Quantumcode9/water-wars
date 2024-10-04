@@ -104,7 +104,9 @@ const InsightsPage = () => {
             </LineChart>
           </ResponsiveContainer>
           <p className="mt-2 text-sm text-gray-600 text-center">
-          Tip: On the hottest day, pretend you&apos;re a popsicle to stay cool!
+
+            Tip: On the hottest day, pretend you&apos;re a popsicle to stay cool!
+
           </p>
         </div>
 
@@ -122,7 +124,8 @@ const InsightsPage = () => {
             </BarChart>
           </ResponsiveContainer>
           <p className="mt-2 text-sm text-gray-600 text-center">
-          Remember: Rain is just the sky&apos;s way of watering your garden... and your enthusiasm.
+
+            Remember: Rain is just the sky&apos;s way of watering your garden... and your enthusiasm.
           </p>
         </div>
 
