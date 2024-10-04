@@ -199,7 +199,7 @@ const PreparednessPage = () => {
     }
   
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 text-center py-8">
         <h1 className="text-3xl font-bold mb-6">
           Disaster Preparedness for {location?.county}, {location?.state}
         </h1>
@@ -232,7 +232,7 @@ const Accordion = ({ title, items, isOpen, onClick }: { title: string; items: st
   return (
     <div className="accordion-item mb-4 border-b">
       <button
-        className="accordion-title w-full flex justify-between items-center text-left py-3 text-lg font-semibold"
+        className="accordion-title w-full text-black flex justify-between items-center text-left py-3 text-lg font-semibold"
         onClick={onClick}
       >
         <span>{title}</span>

@@ -151,7 +151,7 @@ if (index <= 50) {
 }
 };
 
-const AirQualityIndex: React.FC<AirQualityIndexProps> = ({ airQuality, onClick }) => {
+const AirQualityIndex: React.FC<AirQualityIndexProps> = ({ airQuality }) => {
 if (!airQuality) {
     return null;
 }
@@ -170,14 +170,14 @@ const airQualityIndex = Math.round(Math.max(...aqiValues));
 const { category, color, recommendation } = getAirQualityCategory(airQualityIndex);
 
 return (
-    <div onClick={onClick} className="cursor-pointer hover:bg-gray-200 hover:shadow-lg transition duration-300 ease-in-out">
+
     <DashboardCard
         title="Air Quality"
         value={<span className={color}>{`${airQualityIndex} | ${category}`}</span>}
         icon={Waves}
         recommendation={recommendation}
     />
-    </div>
+
 );
 };
 

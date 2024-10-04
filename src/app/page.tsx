@@ -36,7 +36,6 @@ const Dashboard = () => {
       setWeatherData(data);
       setError(null);
 
-      // Store weather data in localStorage
       localStorage.setItem('weatherData', JSON.stringify(data));
 
       // Prepare visualization data and store it in localStorage
@@ -114,14 +113,14 @@ const Dashboard = () => {
   };
 
   if (!isClient) {
-    return null; // Render nothing on the server
+    return null; 
   }
 
   return (
     <div className="space-y-6 pb-16 lg:pb-0">
       {error && <p className="text-red-500">{error}</p>}
 
-      <form onSubmit={handleManualLocationSubmit} className="flex items-center space-x-2">
+      <form onSubmit={handleManualLocationSubmit} className="flex items-center space-x-2 dark:text-black">
         <input
           type="text"
           value={manualLocation}
@@ -129,20 +128,20 @@ const Dashboard = () => {
           placeholder="Enter location (e.g., city or zip code)"
           className="flex-grow px-4 py-2 border rounded-lg"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg">
+        <button type="submit" className="bg-button text-white p-2 rounded-lg">
           <Search size={24} />
         </button>
       </form>
 
       {weatherData && (
         <>
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-accent shadow rounded-lg p-6">
             <h1 className="text-2xl font-bold mb-4">
               Current Weather in {weatherData.location.name}
             </h1>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-4xl font-bold">{weatherData.current.temp_c}°C</p>
+                <p className="text-4xl font-bold">{weatherData.current.temp_f}°F</p>
                 <p className="text-xl">{weatherData.current.condition.text}</p>
               </div>
               <img

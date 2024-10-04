@@ -89,7 +89,7 @@ const InsightsPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Temperature Trends */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-accent p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-center">Temperature Trends</h2>
           <ResponsiveContainer width="100%" height={300}>
           <LineChart data={temperatureData}>
@@ -109,7 +109,7 @@ const InsightsPage = () => {
         </div>
 
         {/* Precipitation Forecast */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-accent p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-center">Precipitation Forecast</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={precipData}>
@@ -127,7 +127,7 @@ const InsightsPage = () => {
         </div>
 
         {/* UV Index Distribution */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-accent p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-center">UV Index Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -154,7 +154,7 @@ const InsightsPage = () => {
         </div>
 
         {/* Alien Activity Forecast */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-accent p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-center">Alien Activity Forecast</h2>
           <ul className="list-disc pl-5">
             {alienActivityData.map((day, index) => (
