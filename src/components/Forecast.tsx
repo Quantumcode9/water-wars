@@ -17,6 +17,7 @@ const settings = {
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 2,
+    arrows: false,
     responsive: [
     {
         breakpoint: 1024, // desktop 
@@ -24,6 +25,7 @@ const settings = {
         slidesToShow: 4,
         slidesToScroll: 2,
         infinite: false,
+        arrows: false,
         },
     },
     {
@@ -31,6 +33,7 @@ const settings = {
         settings: {
         slidesToShow: 3,
         slidesToScroll: 2,
+        arrows: false,
         },
     },
     {
@@ -38,6 +41,7 @@ const settings = {
         settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
+        arrows: false, 
         },
     },
     ],
@@ -68,7 +72,6 @@ return (
                     alt={hour.condition.text}
                     className="mx-auto"
                 />
-                <p>{hour.condition.text}</p>
                 <p>{hour.temp_f}°F</p>
                 </div>
             </div>

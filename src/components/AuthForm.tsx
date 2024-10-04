@@ -114,13 +114,13 @@ const AuthForm = () => {
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+        <button type="submit" className="w-full bg-button text-white py-2 rounded-md hover:bg-green-800">
           {isSignUp ? 'Sign Up' : 'Sign In'}
         </button>
       </form>
       <p className="mt-4 text-center">
         {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-        <button onClick={() => setIsSignUp(!isSignUp)} className="ml-1 text-blue-500 hover:underline">
+        <button onClick={() => setIsSignUp(!isSignUp)} className="ml-1 text-button hover:underline">
           {isSignUp ? 'Sign In' : 'Sign Up'}
         </button>
       </p>
