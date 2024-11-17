@@ -57,7 +57,12 @@ const UVIndex: React.FC<UVIndexProps> = ({ weatherData }) => {
   return (
     <DashboardCard
       title="UV Index"
-      value={<span className={color}>{`${uvIndex} | ${category}`}</span>}
+      value={
+        <div className="flex items-center justify-between space-x-4">
+          <span className={`text-xl md:text-2xl font-bold ${color}`}>{uvIndex}</span>
+          <div className="text-sm md:text-base text-gray-500 mt-1">{category}</div>
+        </div>
+      }
       icon={Sun}
       recommendation={recommendation}
     />
@@ -65,3 +70,6 @@ const UVIndex: React.FC<UVIndexProps> = ({ weatherData }) => {
 };
 
 export default UVIndex;
+
+
+

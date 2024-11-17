@@ -76,7 +76,7 @@ const AuthForm = () => {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-accent rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
+      <h2 className="text-2xl sm:text-md font-bold text-center mb-6">{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {isSignUp && (
           <div>

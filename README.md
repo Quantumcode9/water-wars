@@ -1,10 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cloudy with A Chance of Chaos Probability
 
-## Getting Started
+An interactive, real-time system for monitoring and visualizing environmental changes, including air quality, temperature, and humidity. Designed to provide insights into ecological shifts with user-friendly visualizations and timely alerts.
 
-First, run the development server:
+## App Overview
+
+### Key Features
+
+#### Real-Time Dashboard:
+- **User-friendly interface** to display real-time data (e.g., air quality, temperature, humidity).
+- **Interactive data visualizations** (charts, graphs, heatmaps) to showcase trends and patterns.
+
+#### Alerts System:
+- **Automated alerts** notify users when environmental data exceeds predefined thresholds (e.g., high air quality index or sudden temperature spikes).
+- **Multiple alert channels** (email, SMS, push notifications) for timely user notifications.
+
+#### Data Visualization:
+- **Intuitive visual elements** such as line charts, bar graphs, and scatter plots allow users to explore historical and real-time environmental data.
+- Enable **data filtering and sorting** by time, location, or specific environmental metrics to enhance user experience and uncover trends.
+
+#### User Interface:
+- Build a **responsive and intuitive dashboard**, ensuring real-time data updates and straightforward navigation.
+- Ensure **accessibility and mobile responsiveness** for a seamless experience across all devices.
+
+#### Backend Development:
+- Develop and deploy **robust APIs** to collect, store, and serve real-time environmental data to the frontend.
+- Set up **data integration pipelines** connecting sensors, databases, and the frontend for smooth data flow.
+
+#### Database Management:
+- Implement a **scalable and efficient database** to store environmental data collected from sensors and external sources.
+- Ensure **real-time queries** for fast and efficient data retrieval, displaying results on the dashboard.
+
+---
+
+## Our Build
+
+This weather forecasting application is built with **Next.js**, offering detailed weather data, forecasts, and unique insights such as alien activity based on moon phases. The app fetches weather data from an external API and stores it locally for offline access.
+
+### Features:
+- **Weather Forecast:** Access accurate, real-time weather data for your location or any city worldwide.
+- **Real-Time Data and Alerts:** Stay updated with real-time weather data and instant alerts for significant weather changes, such as air quality and temperature spikes.
+- **Air Quality Index:** Monitor pollution levels and take precautions based on air quality data.
+- **UV Index:** Protect yourself from harmful UV rays with real-time UV index data.
+- **Alien Activity Insights:** Enjoy fun insights on extraterrestrial activity based on lunar phases.
+- **Data Visualization:** Visualize data trends and insights using interactive charts and graphs.
+- **User Authentication:** Secure login and session management for a personalized experience.
+
+### Tech Stack:
+- **Next.js** for the frontend.
+- **Tailwind CSS** for styling and responsive design.
+- **PostgreSQL** for the database.
+- **Prisma** as the ORM for database management.
+- **WeatherAPI** for fetching weather data.
+
+### Contributing:
+We welcome contributions! Feel free to open issues, suggest features, or submit pull requests.
+
+### Getting Started
+
+#### Installation
+
+First, clone the repository and install the dependencies:
 
 ```bash
+git clone zbrustkern/water-wars
+cd water-wars
+npm install
+
+
+WEATHERAPI_KEY=your_api_key_here
+
 npm run dev
 # or
 yarn dev
@@ -12,25 +76,10 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+/app        # Contains the main application components and pages
+/context    # Context providers for managing global state
+/lib        # Utility functions and types
+/components # Reusable UI components
+/public     # Static assets like images
+/prisma     # Database schema for Prisma ORM

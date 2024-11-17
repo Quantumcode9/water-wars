@@ -40,11 +40,18 @@ const Humidity: React.FC<HumidityProps> = ({ weatherData }) => {
   return (
     <DashboardCard
       title="Humidity"
-      value={<span className={color}>{`${humidity}% | ${category}`}</span>}
+      value={
+        <div className="flex items-center justify-between space-x-4">
+          <span className={`text-xl md:text-2xl font-bold ${color}`}>{humidity}</span>
+          <div className="text-sm md:text-base text-gray-500 mt-1">{category}</div>
+        </div>
+      }
       icon={Droplets}
+
       recommendation={recommendation}
     />
   );
 };
+
 
 export default Humidity;

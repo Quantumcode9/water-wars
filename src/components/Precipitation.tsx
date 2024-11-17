@@ -52,7 +52,12 @@ const Precipitation: React.FC<PrecipitationProps> = ({ weatherData }) => {
   return (
     <DashboardCard
       title="Precipitation"
-      value={<span className={color}>{`${precipitation} in | ${category}`}</span>}
+      value={
+        <div className="flex items-center justify-between space-x-4">
+          <span className={`text-xl md:text-2xl font-bold ${color}`}>{precipitation}</span>
+          <div className="text-sm md:text-base text-gray-500 mt-1">{category}</div>
+        </div>
+      }
       icon={CloudRain}
       recommendation={recommendation}
     />
