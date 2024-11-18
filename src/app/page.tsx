@@ -44,31 +44,13 @@ const Dashboard = () => {
         setWeatherData(data);
         setError(null);
 
-        // Automatically set the unit based on location unless overridden by the user
         if (!isAuto) {
           if (data.location.country === 'USA') {
-            setUnit(true); // Set to Fahrenheit
+            setUnit(true); 
           } else {
-            setUnit(false); // Set to Celsius
+            setUnit(false);
           }
         }
-
-        // Save weather data locally
-        localStorage.setItem('weatherData', JSON.stringify(data));
-        const visualizationData = {
-          location: data.location,
-          current: data.current,
-          forecast: data.forecast.forecastday.map((day: ForecastDay) => ({
-            date: day.date,
-            maxTemp: day.day.maxtemp_c,
-            minTemp: day.day.mintemp_c,
-            avgTemp: day.day.avgtemp_c,
-            totalPrecip: day.day.totalprecip_mm,
-            uv: day.day.uv,
-            moonPhase: day.astro.moon_phase,
-          })),
-        };
-        localStorage.setItem('weatherVisualizationData', JSON.stringify(visualizationData));
 
         const locationData = {
           state: data.location.region,
@@ -130,7 +112,6 @@ const Dashboard = () => {
     return null; 
   }
 
-
   return (
     
     <div className="space-y-6 pb-16 lg:pb-0">
@@ -142,7 +123,7 @@ const Dashboard = () => {
           value={manualLocation}
           onChange={(e) => setManualLocation(e.target.value)}
           placeholder="Enter location (e.g., city or zip code)"
-          className="flex-grow px-4 py-2 border rounded-lg"
+          className="flex-grow  border border-gray-300 bg-surfaceSecondary text-foreground px-4 py-2 border rounded-lg"
         />
         <button type="submit" className="bg-button text-white p-2 rounded-lg">
           <Search size={24} />
@@ -152,27 +133,51 @@ const Dashboard = () => {
 
       {weatherData && (
         <>
-          <div className="bg-accent shadow rounded-lg p-6">
-            <h1 className="text-2xl font-bold mb-4">
-              Current Weather in {weatherData.location.name}
-            </h1>
-            <div className="flex items-center justify-between">
-              <div>
-              <p className="text-4xl font-bold">
-                {isFahrenheit
-                  ? `${weatherData.current.temp_f}°F`
-                  : `${weatherData.current.temp_c}°C`}
-              </p>
-              <p className="text-xl">{weatherData.current.condition.text}</p>
-            </div>
-            <Image
-              src={`https:${weatherData.current.condition.icon}`} 
-              alt={weatherData.current.condition.text}
-              width={64}
-              height={64}
-            />
-            </div>
-          </div>
+<div className="bg-accent shadow rounded-lg p-6">
+  {/* Header: Current Weather */}
+  <h1 className="text-2xl font-bold mb-4 text-center md:text-left">
+    Current Weather in {weatherData.location.name}
+  </h1>
+
+  {/* Weather Data Grid */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-light">
+    {/* Left Section: Weather Details */}
+    <div className="flex flex-col items-center md:items-start text-center md:text-left">
+      <p className="text-5xl text-textSecondary font-medium mb-2">
+        {isFahrenheit
+          ? `${weatherData.current.temp_f}°F`
+          : `${weatherData.current.temp_c}°C`}
+      </p>
+      <p className="text-xl text-textSecondary mb-1">
+        {isFahrenheit
+          ? `Feels Like: ${weatherData.current.feelslike_f}°F`
+          : `Feels Like: ${weatherData.current.feelslike_c}°C`}
+      </p>
+      <p className="text-xl text-textSecondary mb-1">
+        Humidity: {weatherData.current.humidity}%
+      </p>
+      <p className="text-xl text-textSecondary mb-1">
+        {isFahrenheit
+          ? `Wind Chill: ${weatherData.current.windchill_f}°F`
+          : `Wind Chill: ${weatherData.current.windchill_c}°C`}
+      </p>
+    </div>
+
+    {/* Right Section: Icon and Additional Info */}
+    <div className="flex flex-col items-center md:items-end text-center md:text-right">
+      <div className="flex flex-col items-center">
+        <Image
+          src={`https:${weatherData.current.condition.icon}`}
+          alt={weatherData.current.condition.text}
+          width={96}
+          height={96}
+          className="mb-2"
+        />
+        <p className="text-xl font-semibold">{weatherData.current.condition.text}</p>
+      </div>
+    </div>
+  </div>
+</div>
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Temperature weatherData={weatherData} />

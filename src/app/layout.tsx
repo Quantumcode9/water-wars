@@ -19,47 +19,44 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions);
-
+const session = await getServerSession(authOptions);
 return (
   <html lang="en">
     <body>
       <Providers session={session}>
-      <WeatherDataProvider>
-      <TemperatureUnitProvider>
-      <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Header */}
-        <header className="relative flex items-center justify-between p-4 bg-border border-b">
-          <h1 className="text-xl text-white font-semibold overflow-visible">
-            Cloudy with A Chance of Chaos Probability
-          </h1>
-            <div className="flex space-x-4">
-            <UnitToggle />
-              <DarkModeToggle />
+        <WeatherDataProvider>
+          <TemperatureUnitProvider>
+            <div className="flex flex-col h-screen overflow-hidden">
+              {/* Header */}
+              <header className="relative z-50 flex items-center justify-between p-4 bg-border border-b">
+                <h1 className="text-xl text-white font-semibold overflow-visible">
+                  Cloudy with A Chance of Chaos Probability
+                </h1>
+                <div className="flex space-x-4">
+                  <UnitToggle />
+                  <DarkModeToggle />
+                  <AuthControl />
+                </div>
+              </header>
 
-              <AuthControl />
+              {/* Sidebar and Main Content */}
+              <div className="flex flex-1 overflow-y-auto">
+                <div className="hidden lg:block">
+                  <Sidebar />
+                </div>
+
+                <main className="flex-1 overflow-x-hidden bg-background p-4">
+                  {children}
+                </main>
+              </div>
+
+              {/* Mobile bottom navigation */}
+              <MobileMenu />
             </div>
-        </header>
-          {/* Sidebar */}
-        <div className="flex h-screen bg-gray-100">
-          {/* Sidebar - hidden on mobile, visible on desktop */}
-          <div className="hidden lg:block">
-            <Sidebar />
-          </div>
-
-            {/* Main content */}
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 pb-16 lg:pb-4">
-              {children}
-            </main>
-
-            {/* Mobile bottom navigation */}
-            <MobileMenu />
-          </div>
-        </div>
-        </TemperatureUnitProvider>
-      </WeatherDataProvider>
+          </TemperatureUnitProvider>
+        </WeatherDataProvider>
       </Providers>
     </body>
   </html>
-);
+  );
 }

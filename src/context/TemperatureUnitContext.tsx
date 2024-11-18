@@ -1,69 +1,83 @@
-    // src/context/TemperatureUnitContext.tsx
+'use client';
 
-    'use client';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-    import React, { createContext, useContext, useState, useEffect } from 'react';
+interface TemperatureUnitContextType {
+isFahrenheit: boolean;
+setUnit: (value: boolean) => void;
+toggleUnit: () => void;
+isAuto: boolean;
+setIsAuto: (value: boolean) => void;
+temperatureUnit: string; // "F" or "C"
+speedUnit: string; // "mph" or "kph"
+}
 
-    interface TemperatureUnitContextType {
-    isFahrenheit: boolean;
-    setUnit: (value: boolean) => void;
-    toggleUnit: () => void;
-    isAuto: boolean;
-    setIsAuto: (value: boolean) => void;
+const TemperatureUnitContext = createContext<TemperatureUnitContextType>({
+isFahrenheit: true,
+setUnit: () => {},
+toggleUnit: () => {},
+isAuto: true,
+setIsAuto: () => {},
+temperatureUnit: "F",
+speedUnit: "mph", 
+});
+
+export const TemperatureUnitProvider = ({ children }: { children: React.ReactNode }) => {
+const [isFahrenheit, setIsFahrenheit] = useState<boolean>(true);
+const [isAuto, setIsAuto] = useState<boolean>(true);
+
+// Load from localStorage on client-side mount
+useEffect(() => {
+    const savedUnit = localStorage.getItem('isFahrenheit');
+    if (savedUnit !== null) {
+    setIsFahrenheit(JSON.parse(savedUnit));
     }
 
-    const TemperatureUnitContext = createContext<TemperatureUnitContextType>({
-    isFahrenheit: true,
-    setUnit: () => {},
-    toggleUnit: () => {},
-    isAuto: true,
-    setIsAuto: () => {},
-    });
+    const savedIsAuto = localStorage.getItem('isAuto');
+    if (savedIsAuto !== null) {
+    setIsAuto(JSON.parse(savedIsAuto));
+    }
+}, []);
 
-    export const TemperatureUnitProvider = ({ children }: { children: React.ReactNode }) => {
-    const [isFahrenheit, setIsFahrenheit] = useState<boolean>(true);
-    const [isAuto, setIsAuto] = useState<boolean>(true);
+// Save to localStorage when isFahrenheit changes
+useEffect(() => {
+    localStorage.setItem('isFahrenheit', JSON.stringify(isFahrenheit));
+}, [isFahrenheit]);
 
-    // Load from localStorage on client-side mount
-    useEffect(() => {
-        const savedUnit = localStorage.getItem('isFahrenheit');
-        if (savedUnit !== null) {
-        setIsFahrenheit(JSON.parse(savedUnit));
-        }
+// Save to localStorage when isAuto changes
+useEffect(() => {
+    localStorage.setItem('isAuto', JSON.stringify(isAuto));
+}, [isAuto]);
 
-        const savedIsAuto = localStorage.getItem('isAuto');
-        if (savedIsAuto !== null) {
-        setIsAuto(JSON.parse(savedIsAuto));
-        }
-    }, []);
+const setUnit = (value: boolean) => {
+    setIsFahrenheit(value);
+    setIsAuto(false);
+};
 
-    // Save to localStorage when isFahrenheit changes
-    useEffect(() => {
-        localStorage.setItem('isFahrenheit', JSON.stringify(isFahrenheit));
-    }, [isFahrenheit]);
+const toggleUnit = () => {
+    setIsFahrenheit((prev) => !prev);
+    setIsAuto(false);
+};
 
-    // Save to localStorage when isAuto changes
-    useEffect(() => {
-        localStorage.setItem('isAuto', JSON.stringify(isAuto));
-    }, [isAuto]);
+// Use `isFahrenheit` to determine units
+const temperatureUnit = isFahrenheit ? "F" : "C";
+const speedUnit = isFahrenheit ? "mph" : "kph";
 
-    const setUnit = (value: boolean) => {
-        setIsFahrenheit(value);
-        setIsAuto(false);
-    };
+return (
+    <TemperatureUnitContext.Provider
+    value={{
+        isFahrenheit,
+        setUnit,
+        toggleUnit,
+        isAuto,
+        setIsAuto,
+        temperatureUnit,
+        speedUnit,
+    }}
+    >
+    {children}
+    </TemperatureUnitContext.Provider>
+);
+};
 
-    const toggleUnit = () => {
-        setIsFahrenheit((prev) => !prev);
-        setIsAuto(false);
-    };
-
-    return (
-        <TemperatureUnitContext.Provider
-        value={{ isFahrenheit, setUnit, toggleUnit, isAuto, setIsAuto }}
-        >
-        {children}
-        </TemperatureUnitContext.Provider>
-    );
-    };
-
-    export const useTemperatureUnit = () => useContext(TemperatureUnitContext);
+export const useTemperatureUnit = () => useContext(TemperatureUnitContext);
