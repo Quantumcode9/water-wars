@@ -55,31 +55,3 @@ This weather forecasting application is built with **Next.js**, offering detaile
 ### Contributing:
 We welcome contributions! Feel free to open issues, suggest features, or submit pull requests.
 
-### Getting Started
-
-#### Installation
-
-First, clone the repository and install the dependencies:
-
-```bash
-git clone zbrustkern/water-wars
-cd water-wars
-npm install
-
-
-WEATHERAPI_KEY=your_api_key_here
-
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-
-/app        # Contains the main application components and pages
-/context    # Context providers for managing global state
-/lib        # Utility functions and types
-/components # Reusable UI components
-/public     # Static assets like images
-/prisma     # Database schema for Prisma ORM
