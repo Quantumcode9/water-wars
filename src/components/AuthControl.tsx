@@ -11,7 +11,7 @@ const AuthControl = () => {
     return (
       <button
         onClick={() => signOut()}
-        className="bg-button hover:bg-green-900 text-center text-white py-2 px-4 rounded"
+        className="bg-button hover:bg-green-900 text-center text-white py-1 px-2 rounded text-xs whitespace-nowrap"
       >
         Sign Out
       </button>
@@ -19,7 +19,7 @@ const AuthControl = () => {
   }
 
   return (
-    <Link href="/auth" className="bg-button text-center hover:bg-green-900 text-white py-2 px-4 rounded">
+    <Link href="/auth" className="bg-button text-center text-xs hover:bg-green-900 text-white py-1 px-3 rounded whitespace-nowrap">
       Sign In
     </Link>
   );

@@ -2,37 +2,40 @@ import React from 'react';
 import { Thermometer } from 'lucide-react';
 import DashboardCard from '@/components/DashboardCard';
 import { WeatherData } from '@/lib/types';
+import { useTemperatureUnit } from '@/context/TemperatureUnitContext';
 
-interface TemperatureFahrenheitProps {
+interface TemperatureProps {
   weatherData: WeatherData | null;
 }
 
-const getTemperatureCategory = (temperatureF: number) => {
-  if (temperatureF <= 50) {
+const getTemperatureCategory = (temperature: number, isFahrenheit: boolean) => {
+  const tempF = isFahrenheit ? temperature : (temperature * 9) / 5 + 32;
+
+  if (tempF <= 50) {
     return {
       category: 'Cold',
       color: 'text-blue-500',
       recommendation: "I can't feel my toes. I hope they're still attached.",
     };
-  } else if (temperatureF <= 68) {
+  } else if (tempF <= 68) {
     return {
       category: 'Mild',
       color: 'text-yellow-500',
       recommendation: "Let's go frolic amongst the flowers! What a perfect day!",
     };
-  } else if (temperatureF <= 86) {
+  } else if (tempF <= 86) {
     return {
       category: 'Warm',
       color: 'text-orange-500',
       recommendation: 'The beach is the only suitable place to be right now.',
     };
-  } else if (temperatureF <= 104) {
+  } else if (tempF <= 104) {
     return {
       category: 'Hot',
       color: 'text-red-500',
       recommendation: "Oh god my clothes are sticking to me – it's too hot.",
     };
-  } else if (temperatureF <= 122) {
+  } else if (tempF <= 122) {
     return {
       category: 'Very Hot',
       color: 'text-purple-500',
@@ -47,22 +50,36 @@ const getTemperatureCategory = (temperatureF: number) => {
   }
 };
 
-const TemperatureFahrenheit: React.FC<TemperatureFahrenheitProps> = ({ weatherData }) => {
+const Temperature: React.FC<TemperatureProps> = ({ weatherData }) => {
+  const { isFahrenheit } = useTemperatureUnit(); 
+
   if (!weatherData) {
     return null;
   }
 
-  const temperatureF = weatherData.current.temp_f;
-  const { category, color, recommendation } = getTemperatureCategory(temperatureF);
+  // Get temperature in the desired unit
+  const temperature = isFahrenheit
+    ? weatherData.current.temp_f
+    : weatherData.current.temp_c;
+
+  // Adjust the temperature category based on the unit
+  const { category, color, recommendation } = getTemperatureCategory(temperature, isFahrenheit);
 
   return (
     <DashboardCard
       title="Temperature"
-      value={<span className={color}>{`${temperatureF.toFixed(1)}°F | ${category}`}</span>}
+      value={
+        <div className="flex items-center justify-between space-x-4">
+        <span className={`text-xl md:text-2xl font-bold ${color}`}>
+          {`${temperature.toFixed(1)}°${isFahrenheit ? 'F' : 'C'}`}</span>
+          <div className={`text-sm md:text-base text-gray-500 mt-1`}>{category}</div>
+        </div>
+      }
       icon={Thermometer}
       recommendation={recommendation}
     />
   );
 };
 
-export default TemperatureFahrenheit;
+export default Temperature;
+

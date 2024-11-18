@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { WeatherData } from '@/lib/types';
 import AlertsModal from './AlertsModal';
+import Image from 'next/image';
 // import ForecastComponent from './Forecast';
 
 interface WeatherProps {
@@ -96,7 +97,7 @@ return (
         <p>
             <strong>Condition:</strong> {weatherData.current.condition.text}
         </p>
-        <img
+        <Image
             src={weatherData.current.condition.icon}
             alt={weatherData.current.condition.text}
             className="mt-2"

@@ -71,7 +71,12 @@ const AlienActivity: React.FC<AlienActivityProps> = ({ moonPhase }) => {
   return (
     <DashboardCard
       title="Alien Activity"
-      value={<span className={color}>{`${category} | ${moonPhase}`}</span>}
+      value={
+        <div className="flex items-center justify-between space-x-4">
+          <span className={`text-xl md:text-2xl font-bold ${color}`}>{category}</span>
+          <div className="text-sm md:text-base text-gray-500 mt-1">{moonPhase}</div>
+        </div>
+      }
       icon={Moon}
       recommendation={recommendation}
     />

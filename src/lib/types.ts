@@ -34,6 +34,8 @@ export interface WeatherData {
     precip_mm: number;
     precip_in: number;
     humidity: number;
+    windchill_f: number;
+    windchill_c: number;
     cloud: number;
     feelslike_c: number;
     feelslike_f: number;

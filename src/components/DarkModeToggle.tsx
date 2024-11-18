@@ -9,7 +9,7 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="flex items-center text-white hover:text-black dark:text-black dark:hover:text-white rounded-lg hover:border-button-highlight transition-all duration-300 ease-in-out focus:outline-none "
+      className="flex items-center text-white hover:text-black dark:text-text-white dark:hover:text-buttonHighlight rounded-lg hover:border-button-highlight transition-all duration-300 ease-in-out focus:outline-none "
     >
       {isDarkMode ? (
         <>

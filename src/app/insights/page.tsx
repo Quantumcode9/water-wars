@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-
+import { useTemperatureUnit } from '@/context/TemperatureUnitContext';
 import { WeatherDataContext } from '@/context/WeatherDataContext';
 import { WeatherData, ForecastDay } from '@/lib/types';
 
@@ -34,7 +34,7 @@ const getAlienActivity = (moonPhase: string) => {
 const InsightsPage = () => {
   const { weatherData, setWeatherData } = useContext(WeatherDataContext);
   const [localWeatherData, setLocalWeatherData] = useState<WeatherData | null>(null);
-
+  const { isFahrenheit } = useTemperatureUnit();
   useEffect(() => {
     if (!weatherData) {
       // Try to get data from localStorage as a backup
@@ -52,13 +52,13 @@ const InsightsPage = () => {
   if (!localWeatherData) {
     return <p>Loading weather insights...</p>;
   }
+  const tempKey = isFahrenheit ? 'f' : 'c';
 
-  // Prepare data for charts
   const temperatureData = localWeatherData.forecast.forecastday.map((day: ForecastDay) => ({
     date: day.date.split('-').slice(1).join('-'), 
-    max: day.day.maxtemp_f,
-    min: day.day.mintemp_f,
-    avg: day.day.avgtemp_f,
+    max: day.day[`maxtemp_${tempKey}` as keyof ForecastDay['day']],
+    min: day.day[`mintemp_${tempKey}` as keyof ForecastDay['day']], 
+    avg: day.day[`avgtemp_${tempKey}` as keyof ForecastDay['day']], 
   }));
 
   const precipData = localWeatherData.forecast.forecastday.map((day: ForecastDay) => ({
@@ -81,6 +81,8 @@ const InsightsPage = () => {
     { name: 'Extreme', value: Math.max(0, currentUV - 10) },
   ];
 
+  
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 text-center">
@@ -98,13 +100,30 @@ const InsightsPage = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="max" stroke="#FF4136" name="Max Temp (°F)" />
-              <Line type="monotone" dataKey="min" stroke="#0074D9" name="Min Temp (°F)" />
-              <Line type="monotone" dataKey="avg" stroke="#2ECC40" name="Avg Temp (°F)" />
+              <Line
+                type="monotone"
+                dataKey="max"
+                stroke="#FF4136"
+                name={`Max Temp (${isFahrenheit ? '°F' : '°C'})`}
+              />
+              <Line
+                type="monotone"
+                dataKey="min"
+                stroke="#0074D9"
+                name={`Min Temp (${isFahrenheit ? '°F' : '°C'})`}
+              />
+              <Line
+                type="monotone"
+                dataKey="avg"
+                stroke="#2ECC40"
+                name={`Avg Temp (${isFahrenheit ? '°F' : '°C'})`}
+              />
             </LineChart>
           </ResponsiveContainer>
           <p className="mt-2 text-sm text-gray-600 text-center">
-          Tip: On the hottest day, pretend you&apos;re a popsicle to stay cool!
+
+            Tip: On the hottest day, pretend you&apos;re a popsicle to stay cool!
+
           </p>
         </div>
 
@@ -122,7 +141,8 @@ const InsightsPage = () => {
             </BarChart>
           </ResponsiveContainer>
           <p className="mt-2 text-sm text-gray-600 text-center">
-          Remember: Rain is just the sky&apos;s way of watering your garden... and your enthusiasm.
+
+            Remember: Rain is just the sky&apos;s way of watering your garden... and your enthusiasm.
           </p>
         </div>
 

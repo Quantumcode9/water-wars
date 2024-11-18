@@ -8,15 +8,24 @@ interface DashboardCardProps {
   recommendation: string;
 }
 
+
 const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, icon: Icon, recommendation }) => (
-  <div className=" bg-surface hover:shadow-lg rounded-lg shadow-md p-6 cursor-pointer">
+  <div className="bg-surface hover:shadow-lg rounded-lg shadow-md p-4 md:p-6 cursor-arrow">
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-semibold">{title}</h2>
-      <Icon size={24} className="text-blue-500" />
+      <h2 className="text-base md:text-lg lg:text-xl font-semibold tracking-wide text-primary">
+        {title}
+      </h2>
+      <Icon size={24} className="text-blue-500 md:text-blue-600 lg:text-blue-700" />
     </div>
-    <div className="text-3xl font-bold mb-2">{value}</div>
-    <p className="text-textSecondary">{recommendation}</p>
+    <div className="text-lg md:text-2xl lg:text-3xl font-extrabold text-secondary mb-3">
+      {value}
+    </div>
+    <p className="text-xs md:text-sm text-center lg:text-md text-textSecondary leading-relaxed">
+      {recommendation}
+    </p>
   </div>
 );
-
 export default DashboardCard;
+
+
+
