@@ -14,7 +14,7 @@ import Windex from '@/components/Windex';
 import Pressure from '@/components/Pressure';
 import Temperature from '@/components/Temperature';
 import AlienActivity from '@/components/AlienActivity';
-import { WeatherData, ForecastDay } from '@/lib/types';
+import { WeatherData } from '@/lib/types';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 
@@ -136,7 +136,7 @@ const Dashboard = () => {
 <div className="bg-accent shadow rounded-lg p-6">
   {/* Header: Current Weather */}
   <h1 className="text-2xl font-bold mb-4 text-center md:text-left">
-    Current Weather in {weatherData.location.name}
+    {weatherData.location.name}
   </h1>
 
   {/* Weather Data Grid */}
@@ -148,32 +148,29 @@ const Dashboard = () => {
           ? `${weatherData.current.temp_f}°F`
           : `${weatherData.current.temp_c}°C`}
       </p>
-      <p className="text-xl text-textSecondary mb-1">
+      <p className="text-l text-textSecondary mb-1">
         {isFahrenheit
           ? `Feels Like: ${weatherData.current.feelslike_f}°F`
           : `Feels Like: ${weatherData.current.feelslike_c}°C`}
       </p>
-      <p className="text-xl text-textSecondary mb-1">
-        Humidity: {weatherData.current.humidity}%
-      </p>
-      <p className="text-xl text-textSecondary mb-1">
+      <p className="text-l text-textSecondary mb-1">
         {isFahrenheit
           ? `Wind Chill: ${weatherData.current.windchill_f}°F`
           : `Wind Chill: ${weatherData.current.windchill_c}°C`}
       </p>
     </div>
 
-    {/* Right Section: Icon and Additional Info */}
+    {/* Right Section: Icon and Condition */}
     <div className="flex flex-col items-center md:items-end text-center md:text-right">
       <div className="flex flex-col items-center">
+      <p className="text-xl font-medium">{weatherData.current.condition.text}</p>
         <Image
           src={`https:${weatherData.current.condition.icon}`}
           alt={weatherData.current.condition.text}
           width={96}
           height={96}
-          className="mb-2"
+          className="none"
         />
-        <p className="text-xl font-semibold">{weatherData.current.condition.text}</p>
       </div>
     </div>
   </div>
@@ -181,20 +178,20 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Temperature weatherData={weatherData} />
-            <Precipitation weatherData={weatherData} />
             <Humidity weatherData={weatherData} />
             <UVIndex weatherData={weatherData} />
-          
             <AirQualityIndex
               airQuality={weatherData.current.air_quality}
               onClick={handleAirQualityClick}
             />
-            <AlienActivity
-              moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase}
-            />
           </div>
+
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Precipitation weatherData={weatherData} />
+          <AlienActivity
+              moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase}
+            />
             <div>
               <Windex weatherData={weatherData} />
             </div>
