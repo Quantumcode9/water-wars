@@ -4,11 +4,9 @@ import { authOptions } from './api/auth/[...nextauth]/options';
 import Sidebar from '@/components/Sidebar';
 import MobileMenu from '@/components/MobileMenu';
 import { Providers } from '@/components/Providers';
-import AuthControl from '@/components/AuthControl';
 import { WeatherDataProvider } from '@/context/WeatherDataContext';
 import { TemperatureUnitProvider } from '@/context/TemperatureUnitContext';
-import DarkModeToggle from '@/components/DarkModeToggle';
-import UnitToggle from '@/components/UnitToggle';
+import SettingsSidebar from '@/components/SettingsSidebar';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -29,19 +27,24 @@ return (
             <div className="flex flex-col h-screen overflow-hidden">
               {/* Header */}
               <header className="relative z-50 flex items-center justify-between p-4 bg-border border-b">
-                <h1 className="text-xl text-white font-semibold overflow-visible">
-                  Cloudy with A Chance of Chaos Probability
+              <h1
+                className="text-white font-semibold overflow-visible"
+                style={{
+                  fontSize: 'clamp(0.8rem, 4vw, 1.4rem)', // More responsive scaling due to title length 
+                }}
+              >
+                  Cloudy With A Chance Of Chaos Probability
                 </h1>
-                <div className="flex space-x-4">
-                  <UnitToggle />
-                  <DarkModeToggle />
-                  <AuthControl />
+                <div className="flex x-4">
+                {/* Sidebar for Accessibility */}
+                <SettingsSidebar/>
                 </div>
               </header>
+            
 
               {/* Sidebar and Main Content */}
               <div className="flex flex-1 overflow-y-auto">
-                <div className="hidden lg:block">
+                <div className="hidden md:block">
                   <Sidebar />
                 </div>
 
