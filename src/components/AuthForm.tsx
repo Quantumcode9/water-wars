@@ -46,7 +46,7 @@ const AuthForm = () => {
         if (result?.error) {
           setError(result.error);
         } else {
-          router.push('/dashboard');
+          router.push('/');
           router.refresh(); // Refresh to update the session
         }
       } catch (error) {
@@ -64,7 +64,7 @@ const AuthForm = () => {
         if (result?.error) {
           setError(result.error);
         } else {
-          router.push('/dashboard');
+          router.push('/');
           router.refresh(); // Refresh to update the session
         }
       } catch (error) {
