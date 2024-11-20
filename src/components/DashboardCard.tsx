@@ -22,7 +22,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, icon: Icon,
     <div className="text-lg md:text-2xl lg:text-3xl font-extrabold text-secondary mb-3">
       {value}
     </div>
-    <p className="text-xs md:text-sm lg:text-md text-accent leading-relaxed">
+    <p className="text-xs md:text-sm lg:text-md text-textSecondary leading-relaxed">
       {recommendation}
     </p>
   </div>

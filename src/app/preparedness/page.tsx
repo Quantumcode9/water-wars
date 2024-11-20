@@ -105,11 +105,17 @@ const PreparednessPage = () => {
     );
   }
   return (
-    <div className="container mx-auto px-4 text-center py-8">
-      <h1 className="text-3xl font-bold mb-6 text-foreground">
-        Disaster Preparedness for {location?.county}, {location?.state}
-      </h1>
-      <div className="space-y-6">
+    <div className="container mx-auto px-4  py-8">
+          <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Disaster Preparedness
+          </h1>
+          <h2 className="text-xl text-textSecondary">
+            {location?.county}, {location?.state}
+          </h2>
+        </div>
+        <div className="space-y-6"> 
+
         {filteredPreparednessData.map((disaster, index) => (
           <Accordion
             key={index}
