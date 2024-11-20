@@ -16,8 +16,9 @@ const handleToggle = () => {
 return (
     <button
     onClick={handleToggle}
-    className="flex items-center text-white hover:text-buttonHighlight rounded-lg transition-all duration-300 ease-in-out focus:outline-none"
+    className="w-full h-full flex items-center justify-between px-4 py-5 bg-transparent rounded"
     >
+    <span className="block">Change Unit</span>
     {isFahrenheit ? (
         <>
         <Thermometer className="w-5 h-5" />

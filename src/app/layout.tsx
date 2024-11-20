@@ -12,6 +12,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '@/app/globals.css';
 
+export const metadata = {
+  title: "Cloudy With A Chance Of Chaos Probability",
+  description: "Weather alerts",
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -37,7 +42,9 @@ return (
                 </h1>
                 <div className="flex x-4">
                 {/* Sidebar for Accessibility */}
-                <SettingsSidebar/>
+                <SettingsSidebar
+                
+                />
                 </div>
               </header>
             

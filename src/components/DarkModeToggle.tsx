@@ -9,16 +9,13 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="flex items-center text-white hover:text-black dark:text-text-white dark:hover:text-buttonHighlight rounded-lg hover:border-button-highlight transition-all duration-300 ease-in-out focus:outline-none "
+      className="w-full h-full flex items-center justify-between px-4 py-5 bg-transparent rounded"
     >
+      <span className="block">Change Theme</span>
       {isDarkMode ? (
-        <>
-          <Sun className="w-5 h-5 mr-2" />
-        </>
+        <Sun className="w-5 h-5" />
       ) : (
-        <>
-          <Moon className="w-5 h-5 mr-2" />
-        </>
+        <Moon className="w-5 h-5" />
       )}
     </button>
   );

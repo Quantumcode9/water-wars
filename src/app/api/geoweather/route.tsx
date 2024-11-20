@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     // for local development, use your own IP address
     if (!ip || ip === '::1' || ip.startsWith('127.0.0.1')) {
-      ip = '172.225.29.220';  
+      ip = '';  
     } else if (ip.includes(',')) {
       ip = ip.split(',')[0].trim();
     }

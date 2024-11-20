@@ -184,14 +184,14 @@ const Dashboard = () => {
               airQuality={weatherData.current.air_quality}
               onClick={handleAirQualityClick}
             />
+              <Precipitation weatherData={weatherData} />
+          <AlienActivity
+              moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase}
+            />
           </div>
 
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Precipitation weatherData={weatherData} />
-          <AlienActivity
-              moonPhase={weatherData.forecast.forecastday[0].astro.moon_phase}
-            />
             <div>
               <Windex weatherData={weatherData} />
             </div>
