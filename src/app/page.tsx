@@ -73,10 +73,8 @@ const Dashboard = () => {
   );
 
   useEffect(() => {
-    const storedData = localStorage.getItem('weatherData');
-    if (storedData) {
-      setWeatherData(JSON.parse(storedData));
-    } else if (navigator.geolocation) {
+    // If there's no valid weatherData, and browser supports geolocation:
+    if (!weatherData && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -87,10 +85,10 @@ const Dashboard = () => {
           setError('Failed to get your location. Please enter a location manually.');
         }
       );
-    } else {
+    } else if (!weatherData) {
       setError('Geolocation is not supported by your browser. Please enter a location manually.');
     }
-  }, [fetchWeatherData, setWeatherData]);
+  }, [fetchWeatherData, weatherData]);
 
   const handleManualLocationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +96,6 @@ const Dashboard = () => {
       fetchWeatherData(manualLocation);
     }
   };
-
 
   const handleAirQualityClick = () => {
     setIsModalOpen(true);
@@ -191,7 +188,7 @@ const Dashboard = () => {
           </div>
 
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 custom-md:grid-cols-2 gap-6">
             <div>
               <Windex weatherData={weatherData} />
             </div>

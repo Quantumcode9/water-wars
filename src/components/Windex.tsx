@@ -70,30 +70,62 @@ const WindDisplay: React.FC<WindDisplayProps> = ({ weatherData }) => {
                 </div>
 
                 {/* Right Column: Compass */}
-                <div className="flex justify-center items-center flex-shrink-0 w-32 h-32">
+                <div className="flex justify-center items-center flex-shrink-0 max-w-[8rem] max-h-[8rem] mr-2">
                     <div className="relative w-full h-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full" viewBox="-10 -10 120 120">
-                            <circle cx="50" cy="50" r="45" fill="none" className="stroke-gray-300 dark:stroke-[rgba(255,255,255,0.3)]" strokeWidth="4" />
-                            {/* Cardinal Directions */}
-                            <text x="50" y="10" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="8">N</text>
-                            <text x="50" y="95" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="8">S</text>
-                            <text x="5" y="55" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="8">W</text>
-                            <text x="95" y="55" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="8">E</text>
-                            {/* Needle */}
-                            <line
-                                x1="50"
-                                y1="50"
-                                x2={50 + 35 * Math.cos((wind_degree - 90) * (Math.PI / 180))}
-                                y2={50 + 35 * Math.sin((wind_degree - 90) * (Math.PI / 180))}
-                                className="stroke-gray-500 dark:stroke-white"
-                                strokeWidth="2"
-                                markerEnd="url(#arrowhead)"
-                            />
-                            <defs>
-                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto">
-                                    <polygon points="0 0, 10 3.5, 0 7" className="fill-gray-500 dark:fill-white" />
-                                </marker>
-                            </defs>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full" viewBox="-10 -10 120 120">
+                        <circle cx="50" cy="50" r="45" fill="none" className="stroke-gray-300 dark:stroke-[rgba(255,255,255,0.3)]" strokeWidth="4" />
+                        
+                        {/* Cardinal Directions */}
+                        <text x="50" y="10" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="12">N</text>
+                        <text x="50" y="100" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="12">S</text>
+                        <text x="5" y="55" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="12">W</text>
+                        <text x="95" y="55" textAnchor="middle" className="fill-gray-700 dark:fill-gray-300" fontSize="12">E</text>
+
+                        <defs>
+                            {/* Arrowhead marker*/}
+                            <marker 
+                            id="arrowhead" 
+                            markerWidth="10" 
+                            markerHeight="7" 
+                            refX="5" 
+                            refY="3.5" 
+                            orient="auto"
+                            >
+                            <polygon points="0 0, 10 3.5, 0 7" className="fill-gray-500 dark:fill-white" />
+                            </marker>
+
+                            {/* Circle marker */}
+                            <marker 
+                            id="circle" 
+                            markerWidth="4" 
+                            markerHeight="4" 
+                            refX="2" 
+                            refY="2" 
+                            orient="auto"
+                            >
+                            <circle cx="2" cy="2" r="2" className="fill-gray-400 dark:fill-gray-100 stroke-gray-300 dark:stroke-gray-300/30" />
+                            </marker>
+                        </defs>
+
+                        {/* Line indicating where the wind is going (arrow) */}
+                        <line
+                            x1="50"
+                            y1="50"
+                            x2={50 + 40 * Math.cos((wind_degree + 90) * (Math.PI / 180))}
+                            y2={50 + 40 * Math.sin((wind_degree + 90) * (Math.PI / 180))}
+                            className="stroke-gray-400"
+                            strokeWidth="2"
+                            markerEnd="url(#arrowhead)"
+                        />
+                        <line
+                            x1="50"
+                            y1="50"
+                            x2={50 + 40 * Math.cos((wind_degree - 90) * (Math.PI / 180))}
+                            y2={50 + 40 * Math.sin((wind_degree - 90) * (Math.PI / 180))}
+                            className="stroke-gray-400"
+                            strokeWidth="2"
+                            markerEnd="url(#circle)"
+                        />
                         </svg>
                         {/* Center Speed */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">

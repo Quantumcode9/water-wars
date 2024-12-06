@@ -9,6 +9,9 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        'custom-md': '879px',
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
